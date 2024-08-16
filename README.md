@@ -1,6 +1,6 @@
 # Hierarchical Empirical Bayes Model
 
-This repository contains MATLAB functions for implementing the hierarchical empirical Bayes model of effective connectivity described in Greaves et al. (2024).
+This repository contains MATLAB functions for implementing the hierarchical empirical Bayes model of effective connectivity described in [Greaves et al. (2024)](https://doi.org/10.1101/2024.04.03.587831).
 
 ## Prerequisites
 
