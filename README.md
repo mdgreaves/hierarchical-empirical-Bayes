@@ -19,10 +19,10 @@ heb_sim_run();
 ```
 
 This function executes `heb_sim` across a predefined set of signal-to-noise ratio (SNR) levels. The analysis involves the following:
-1. Simulating ground-truth effective connectivity.
+1. Simulating ground-truth effective connectivity at both the group and subject levels, followed by the generation of downstream blood-oxygen-level-dependent (BOLD) signals.
 2. Performing parameter recovery via:
    - The hierarchical empirical Bayes model.
-   - A structurally informed multivariate autoregressive (MVAR) model (see Tanner et al., 2024, [here](https://doi.org/10.1038/s41467-024-50248-6)).
+   - A structurally informed multivariate autoregressive model (see Tanner et al., 2024, [here](https://doi.org/10.1038/s41467-024-50248-6)).
 
 The figures generated are consistent with those presented in the associated publication.
 
@@ -30,11 +30,9 @@ The figures generated are consistent with those presented in the associated publ
 
 ## Example Workflow with Data
 
-To apply the hierarchical empirical Bayes approach to an existing dataset, the following requirements should be met:
+To apply the hierarchical empirical Bayes approach to an existing dataset, it is recommended that the following requirements be met:
 
-- A cell array of >2 dynamic causal models (DCMs) inverted under identical prior assumptions, modeling an effective connectivity network with *n* > 2 regions.  
-  - Per the procedures in the associated study, the prior variance for intraregional connections is fixed at *1/64*, while the prior variance for interregional connections is *1/2* (see the *n* diagonal elements of `DCM.M.pC`).
-  - This constraint can be modified by bypassing the relevant `assert` commands.
+- A cell array of >2 dynamic causal models (DCMs) inverted under identical prior assumptions, modeling an effective connectivity network with *n* > 2 regions. Per the procedures in the associated study, the prior variance for intraregional connections is fixed at *1/64*, while the prior variance for interregional connections is *1/2* (see the *n* diagonal elements of `DCM.M.pC`). This constraint can be modified by bypassing the relevant `assert` commands.
 - A normalized [0,1] structural connectivity matrix (`SC`) (or another relevant matrix) matching the dimensions of the `A` (transition) matrices, such that `SC(i,j)` corresponds to `DCM.Ep.A(i,j)`.
 
 ### **1. Explore hierarchical empirical Bayes models in a test sample**
