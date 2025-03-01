@@ -1,6 +1,6 @@
 # Hierarchical Empirical Bayes Model
 
-This repository contains MATLAB functions for implementing the hierarchical empirical Bayes (HEB) model of effective connectivity described in [Greaves et al. (2024)](https://doi.org/10.1101/2024.04.03.587831).
+This repository contains MATLAB functions for implementing the hierarchical empirical Bayes model of effective connectivity described in [Greaves et al. (2024)](https://doi.org/10.1101/2024.04.03.587831).
 
 ## Prerequisites
 
@@ -63,7 +63,7 @@ heb_study(P, C, network);
 ```
 
 ### **2. Assess the consistency of Bayesian Model Averaging (BMA) data-to-variance mapping**
-- Repeat the steps above for the *holdout sample*, storing the *holdout DCMs* in `Pv` and the secondary dataset in `Cv`.
+- Repeat the steps above for the *holdout* sample, storing the holdout DCMs in `Pv` and the secondary dataset in `Cv`.
 - Use the `HEB` file generated in Step 1.
 
 #### Example:
