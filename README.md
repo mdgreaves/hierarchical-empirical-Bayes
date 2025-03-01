@@ -1,60 +1,92 @@
 # Hierarchical Empirical Bayes Model
 
-This repository contains MATLAB functions for implementing the hierarchical empirical Bayes model of effective connectivity described in [Greaves et al. (2024)](https://doi.org/10.1101/2024.04.03.587831).
+This repository contains MATLAB functions for implementing the hierarchical empirical Bayes (HEB) model of effective connectivity described in [Greaves et al. (2024)](https://doi.org/10.1101/2024.04.03.587831).
 
 ## Prerequisites
 
-The functions in this repository rely on the statistical parametric mapping toolbox (SPM12), and—as this is an empirical Bayes procedure—require access to real data. To use these functions, you will need:
-1. A cell array of > 2 DCMs inverted under identical prior assumptions that describe an effective connectivity network of *n* > 2 regions. Note that per the procedures reported in the associated study, it is assumed that the prior variance for all intraregional effective connections is fixed at 1/64, and that the prior variance for all interregional effective connections is fixed at 1/2 (see the *n* diagonal elements of `DCM.M.pC`). It is, however, easy to bypass this requirement—i.e., the assert commands—if one wishes to explore a different procedure.
-2. A normalized [0,1] structural connectivity matrix (or matrix containing other relevant data) that has the same dimensions as the `A` (transition) matrices (such that the connection in `C(i,j)` corresponds to the connection in `DCM.Ep.A(i,j)`).
+The functions in this repository require:
+- **MATLAB R2024a** (or later)
+- The **Statistical Parametric Mapping (SPM12) toolbox**
+- The **Parallel Computing Toolbox** (recommended for efficient execution)
 
-## Example Workflow
+## Running Simulations
 
-1. **Explore hierarchical empirical Bayes models in a test sample**:
-   - Store the inverted (test) DCMs in a cell array `P`, and correctly-formatted secondary data—e.g., structural connectivity—into variable `C`.
+To reproduce the simulations presented in the associated publication, download the full directory structure and execute the following function **from the directory where it is located**:
 
-   Example:
-   ```matlab
-   % Network name
-   network = 'DMN';
+```matlab
+% Run simulations
+heb_sim_run();
+```
 
-   % Test directory
-   test_dir = fullfile(pwd, 'test_subjects');
+This function executes `heb_sim` across a predefined set of **signal-to-noise ratio (SNR) levels**. The analysis involves:
+1. Simulating **ground-truth effective connectivity**.
+2. Performing **parameter recovery** via:
+   - The **hierarchical empirical Bayes model**.
+   - A **structurally informed multivariate autoregressive (MVAR) model** (see Tanner et al., 2024).
 
-   % Load DCMs
-   DCM_filelist = dir(fullfile(test_dir, '**', sprintf('*DCM_%s.mat', network)));
+The figures generated are consistent with those presented in the associated publication.
 
-   % Load each DCM file into the cell array P
-   P = cellfun(@(f) load(fullfile(f.folder, f.name), 'DCM').DCM, num2cell(DCM_filelist), 'UniformOutput', false);
+### **Note on Computation Time**
+Running the simulation for each SNR level takes approximately **14 minutes** on a local machine when **parallel computing is enabled**. This estimate is based on:
+- **MATLAB R2024a** running on **macOS (Darwin 21.6.0)**
+- **8-core Quartz CPU**
+- Execution using `parpool` with **8 workers**, allowing parallelized computations
+- The system being configured with **Java 1.8.0_392-b08**, utilizing **Amazon’s OpenJDK 64-Bit Server VM**.
 
-   % Load structural connectivity data
-   C = load(fullfile(test_dir, dir(fullfile(test_dir, '*SC.mat')).name)).SC;
+## Example Workflow with Data
 
-   % Explore hierarchical empirical Bayes models
-   heb_study(P, C, network);
-   ```
+To apply the hierarchical empirical Bayes approach to an **existing dataset**, the following requirements should be met:
 
-2. **Assess the consistency of the Bayesian model average (BMA) data-to-variance mapping**:
-   - Repeat the steps outlined above, loading the inverted (holdout) DCMs in a cell array `Pv`, and secondary data into variable `Cv`.
-   - Store the path to the `HEB` file that was saved during the previous step.
+- **A cell array of >2 DCMs** inverted under identical prior assumptions, modeling an effective connectivity network with *n* > 2 regions.  
+  - Per the procedures in the associated study, the prior variance for **intraregional connections** is fixed at **1/64**, while the prior variance for **interregional connections** is **1/2** (see the *n* diagonal elements of `DCM.M.pC`).
+  - This constraint can be modified by bypassing the relevant `assert` commands.
+- **A normalized [0,1] structural connectivity matrix (`SC`)** (or another relevant dataset) matching the dimensions of the `A` (transition) matrices, such that **`SC(i,j)` corresponds to `DCM.Ep.A(i,j)`**.
 
-   Example:
-   ```matlab
-   % Store the path to the 'HEB' file that was saved
-   HEB = fullfile(pwd, sprintf('HEB_explore_%s.mat', network));
+### **1. Explore hierarchical empirical Bayes models in a test sample**
+- Store the inverted **test** DCMs in a cell array `P` and the secondary data (e.g., structural connectivity) in `C`.
 
-   % Validate Bayesian model average (BMA) data-to-variance mapping
-   heb_study(Pv, Cv, network, HEB);
-   ```
+#### Example:
+```matlab
+% Network name
+network = 'DMN';
 
-## Flexibility and Interpretation
+% Directory containing test subjects
+test_dir = fullfile(pwd, 'test_subjects');
 
-The code provided in this repository can be easily modified to consider different data-to-prior-variance mappings, and thus consider different hypotheses regarding the relationship between structural and effective connectivity. The output provided by the `heb_study` function is easy to interpret for those with some knowledge of DCM (or similar models inverted using SPM's nonlinear systems identification function). It can be used to address a number of questions related to the coupling between structural and effective connectivity, for example.
+% Load DCMs
+DCM_filelist = dir(fullfile(test_dir, '**', sprintf('*DCM_%s.mat', network)));
 
-## Contact
+% Store loaded DCMs in cell array P
+P = cellfun(@(f) load(fullfile(f.folder, f.name), 'DCM').DCM, num2cell(DCM_filelist), 'UniformOutput', false);
 
-Questions? Please feel free to reach out.
+% Load structural connectivity matrix
+C = load(fullfile(test_dir, dir(fullfile(test_dir, '*SC.mat')).name)).SC;
 
-## References
+% Run hierarchical empirical Bayes study
+heb_study(P, C, network);
+```
 
-Greaves et al. (2024). Structurally informed resting-state effective connectivity recapitulates cortical hierarchy. DOI: [https://doi.org/10.1101/2024.04.03.587831](https://doi.org/10.1101/2024.04.03.587831)
+### **2. Assess the consistency of Bayesian Model Averaging (BMA) data-to-variance mapping**
+- Repeat the steps above for the **holdout sample**, storing the **holdout DCMs** in `Pv` and the secondary dataset in `Cv`.
+- Use the `HEB` file generated in Step 1.
+
+#### Example:
+```matlab
+% Store the path to the 'HEB' file saved in the previous step
+HEB = fullfile(pwd, sprintf('HEB_explore_%s.mat', network));
+
+% Validate Bayesian model average (BMA) data-to-variance mapping
+heb_study(Pv, Cv, network, HEB);
+```
+
+## **Flexibility and Interpretation**
+The code in this repository can be easily modified to explore **different data-to-prior-variance mappings**, allowing for hypothesis testing regarding the relationship between structural and effective connectivity.  
+
+The outputs of `heb_study` are straightforward to interpret for researchers familiar with **Dynamic Causal Modeling (DCM)** or other models estimated using **SPM's nonlinear system identification framework**. This approach can address a range of research questions related to **structural-functional coupling**.
+
+## **Contact**
+For questions or clarifications, feel free to reach out.
+
+## **Reference**
+Greaves et al. (2024). *Structurally informed resting-state effective connectivity recapitulates cortical hierarchy.*  
+DOI: [https://doi.org/10.1101/2024.04.03.587831](https://doi.org/10.1101/2024.04.03.587831)
