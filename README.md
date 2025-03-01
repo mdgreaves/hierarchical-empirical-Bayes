@@ -18,7 +18,7 @@ To reproduce the simulations presented in the associated publication, download t
 heb_sim_run();
 ```
 
-This function executes `heb_sim` across a predefined set of signal-to-noise ratio (SNR) levels. The analysis involves:
+This function executes `heb_sim` across a predefined set of signal-to-noise ratio (SNR) levels. The analysis involves the following:
 1. Simulating ground-truth effective connectivity.
 2. Performing parameter recovery via:
    - The hierarchical empirical Bayes model.
