@@ -32,11 +32,11 @@ The figures generated are consistent with those presented in the associated publ
 
 To apply the hierarchical empirical Bayes approach to an existing dataset, it is recommended that the following requirements be met:
 
-- A cell array of >2 dynamic causal models (DCMs) inverted under identical prior assumptions, modeling an effective connectivity network with *n* > 2 regions. Per the procedures in the associated study, the prior variance for intraregional connections is fixed at *1/64*, while the prior variance for interregional connections is *1/2* (see the *n* diagonal elements of `DCM.M.pC`). This constraint can be modified by bypassing the relevant `assert` commands.
-- A normalized [0,1] structural connectivity matrix (`SC`) (or another relevant matrix) matching the dimensions of the `A` (transition) matrices, such that `SC(i,j)` corresponds to `DCM.Ep.A(i,j)`.
+- A cell array of >2 dynamic causal models (DCMs) inverted under identical prior assumptions, modeling an effective connectivity network with *n* > 2 regions. Per the procedures in the associated study, the prior variance for intraregional connections is fixed at 1/64, while the prior variance for interregional connections is 1/2 (see the *n* diagonal elements of `DCM.M.pC`). This constraint can be modified by bypassing the relevant `assert` commands.
+- A normalized [0,1] structural connectivity matrix (`C`) (or another relevant matrix) matching the dimensions of the `A` (transition) matrices, such that `C(i,j)` corresponds to `DCM.Ep.A(i,j)`.
 
 ### **1. Explore hierarchical empirical Bayes models in a test sample**
-- Store the inverted *test* DCMs in a cell array `P` and the secondary data (e.g., structural connectivity) in `C`.
+- Store the inverted *test* DCMs in a cell array `P` and the structural connectivity in `C`.
 
 #### Example:
 ```matlab
@@ -61,8 +61,8 @@ heb_study(P, C, network);
 ```
 
 ### **2. Assess the consistency of Bayesian Model Averaging (BMA) data-to-variance mapping**
-- Repeat the steps above for the *holdout* sample, storing the holdout DCMs in `Pv` and the secondary dataset in `Cv`.
-- Use the `HEB` file generated in Step 1.
+- Repeat the steps above for the *holdout* sample, storing the holdout DCMs in `Pv` and structural connectivity in `Cv`.
+- Store the path to the `HEB` file saved during the previous step.
 
 #### Example:
 ```matlab
