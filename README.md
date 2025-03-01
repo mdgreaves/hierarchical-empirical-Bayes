@@ -61,7 +61,7 @@ heb_study(P, C, network);
 ```
 
 ### **2. Assess the consistency of Bayesian Model Averaging (BMA) data-to-variance mapping**
-- Repeat the steps above for the *holdout* sample, storing the holdout DCMs in `Pv` and structural connectivity in `Cv`.
+- Repeat the steps above for the *holdout* sample. Store holdout DCMs in `Pv` and structural connectivity in `Cv`.
 - Store the path to the `HEB` file saved during the previous step.
 
 #### Example:
