@@ -5,45 +5,40 @@ This repository contains MATLAB functions for implementing the hierarchical empi
 ## Prerequisites
 
 The functions in this repository require:
-- **MATLAB R2024a** (or later)
-- The **Statistical Parametric Mapping (SPM12) toolbox**
-- The **Parallel Computing Toolbox** (recommended for efficient execution)
+- MATLAB R2024a (or later)
+- The Statistical Parametric Mapping (SPM12) toolbox
+- The Parallel Computing Toolbox (recommended for efficient execution)
 
 ## Running Simulations
 
-To reproduce the simulations presented in the associated publication, download the full directory structure and execute the following function **from the directory where it is located**:
+To reproduce the simulations presented in the associated publication, download the full directory structure and execute the following function from the directory where it is located:
 
 ```matlab
 % Run simulations
 heb_sim_run();
 ```
 
-This function executes `heb_sim` across a predefined set of **signal-to-noise ratio (SNR) levels**. The analysis involves:
-1. Simulating **ground-truth effective connectivity**.
-2. Performing **parameter recovery** via:
-   - The **hierarchical empirical Bayes model**.
-   - A **structurally informed multivariate autoregressive (MVAR) model** (see Tanner et al., 2024).
+This function executes `heb_sim` across a predefined set of signal-to-noise ratio (SNR) levels. The analysis involves:
+1. Simulating ground-truth effective connectivity.
+2. Performing parameter recovery via:
+   - The hierarchical empirical Bayes model.
+   - A structurally informed multivariate autoregressive (MVAR) model (see Tanner et al., 2024, [here](https://doi.org/10.1038/s41467-024-50248-6)).
 
 The figures generated are consistent with those presented in the associated publication.
 
-### **Note on Computation Time**
-Running the simulation for each SNR level takes approximately **14 minutes** on a local machine when **parallel computing is enabled**. This estimate is based on:
-- **MATLAB R2024a** running on **macOS (Darwin 21.6.0)**
-- **8-core Quartz CPU**
-- Execution using `parpool` with **8 workers**, allowing parallelized computations
-- The system being configured with **Java 1.8.0_392-b08**, utilizing **Amazon’s OpenJDK 64-Bit Server VM**.
+**Note on Computation Time:** Running the simulation-based analysis for each SNR level takes approximately 14 minutes on a local machine when parallel computing is enabled. This estimate is based on: MATLAB R2024a running on macOS (Darwin 21.6.0) with an 8-core Quartz CPU. The system was configured with Java 1.8.0_392-b08, utilising Amazon’s OpenJDK 64-Bit Server VM. Execution utilized `parpool` with 8 workers, allowing parallelized computations.
 
 ## Example Workflow with Data
 
-To apply the hierarchical empirical Bayes approach to an **existing dataset**, the following requirements should be met:
+To apply the hierarchical empirical Bayes approach to an existing dataset, the following requirements should be met:
 
-- **A cell array of >2 DCMs** inverted under identical prior assumptions, modeling an effective connectivity network with *n* > 2 regions.  
-  - Per the procedures in the associated study, the prior variance for **intraregional connections** is fixed at **1/64**, while the prior variance for **interregional connections** is **1/2** (see the *n* diagonal elements of `DCM.M.pC`).
+- A cell array of >2 dynamic causal models (DCMs) inverted under identical prior assumptions, modeling an effective connectivity network with *n* > 2 regions.  
+  - Per the procedures in the associated study, the prior variance for intraregional connections is fixed at *1/64*, while the prior variance for interregional connections is *1/2* (see the *n* diagonal elements of `DCM.M.pC`).
   - This constraint can be modified by bypassing the relevant `assert` commands.
-- **A normalized [0,1] structural connectivity matrix (`SC`)** (or another relevant dataset) matching the dimensions of the `A` (transition) matrices, such that **`SC(i,j)` corresponds to `DCM.Ep.A(i,j)`**.
+- A normalized [0,1] structural connectivity matrix (`SC`) (or another relevant matrix) matching the dimensions of the `A` (transition) matrices, such that `SC(i,j)` corresponds to `DCM.Ep.A(i,j)`.
 
 ### **1. Explore hierarchical empirical Bayes models in a test sample**
-- Store the inverted **test** DCMs in a cell array `P` and the secondary data (e.g., structural connectivity) in `C`.
+- Store the inverted *test* DCMs in a cell array `P` and the secondary data (e.g., structural connectivity) in `C`.
 
 #### Example:
 ```matlab
@@ -57,7 +52,8 @@ test_dir = fullfile(pwd, 'test_subjects');
 DCM_filelist = dir(fullfile(test_dir, '**', sprintf('*DCM_%s.mat', network)));
 
 % Store loaded DCMs in cell array P
-P = cellfun(@(f) load(fullfile(f.folder, f.name), 'DCM').DCM, num2cell(DCM_filelist), 'UniformOutput', false);
+P = cellfun(@(f) load(fullfile(f.folder, f.name), 'DCM').DCM,...
+ num2cell(DCM_filelist), 'UniformOutput', false);
 
 % Load structural connectivity matrix
 C = load(fullfile(test_dir, dir(fullfile(test_dir, '*SC.mat')).name)).SC;
@@ -67,7 +63,7 @@ heb_study(P, C, network);
 ```
 
 ### **2. Assess the consistency of Bayesian Model Averaging (BMA) data-to-variance mapping**
-- Repeat the steps above for the **holdout sample**, storing the **holdout DCMs** in `Pv` and the secondary dataset in `Cv`.
+- Repeat the steps above for the *holdout sample*, storing the *holdout DCMs* in `Pv` and the secondary dataset in `Cv`.
 - Use the `HEB` file generated in Step 1.
 
 #### Example:
@@ -80,12 +76,12 @@ heb_study(Pv, Cv, network, HEB);
 ```
 
 ## **Flexibility and Interpretation**
-The code in this repository can be easily modified to explore **different data-to-prior-variance mappings**, allowing for hypothesis testing regarding the relationship between structural and effective connectivity.  
+The code in this repository can be easily modified to explore different data-to-prior-variance mappings, allowing for hypothesis testing regarding the relationship between structural and effective connectivity.  
 
-The outputs of `heb_study` are straightforward to interpret for researchers familiar with **Dynamic Causal Modeling (DCM)** or other models estimated using **SPM's nonlinear system identification framework**. This approach can address a range of research questions related to **structural-functional coupling**.
+The outputs of `heb_study` are straightforward to interpret for researchers familiar with dynamic causal modeling or other models estimated using SPM's nonlinear system identification framework. This approach can address a range of research questions related to structural-functional coupling.
 
 ## **Contact**
-For questions or clarifications, feel free to reach out.
+Questions? Please feel free to reach out.
 
 ## **Reference**
 Greaves et al. (2024). *Structurally informed resting-state effective connectivity recapitulates cortical hierarchy.*  
