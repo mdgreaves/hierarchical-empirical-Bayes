@@ -28,6 +28,15 @@ mvar_rmse_group = sqrt(mean((W_group(:) - Ag(:)).^2));
 
 % Results for (structurally informed) effective connectivity
 heb_Ag = full(HEB.Ep);
+
+% Correct for log-normal scaling (convert to Hz)
+A = heb_Ag;
+A = reshape(A, sqrt(numel(A)), sqrt(numel(A)));
+A(logical(eye(sqrt(numel(A))))) =...
+    -0.5 * exp(A(logical(eye(sqrt(numel(A))))));
+heb_Ag = A(:);
+
+% Grop-level statistics
 heb_group_pearsons_r = corr(Ag(:), heb_Ag(:));
 heb_rmse_group = sqrt(mean((heb_Ag(:) - Ag(:)).^2));
 
@@ -46,6 +55,12 @@ heb_sign_pe = zeros(s, 1);
 for i = 1:s
     % Ground truth for subject
     A_sub = As{i};
+
+    % Correct for log-normal scaling (convert to Hz)
+    A = heb_Ag;
+    A(logical(eye(sqrt(numel(A))))) =...
+        -0.5 * exp(A(logical(eye(sqrt(numel(A))))));
+    heb_Ag = A;
 
     % MVAR Pearson's r, RMSE, and PE
     W_v = W(:, :, i);
@@ -73,17 +88,21 @@ xy_ax = max(1, ceil(max(abs([W_group(:); heb_Ag(:)]))));
 %--------------------------------------------------------------------------
 
 % Subplot A: Normalized structural connectivity
-ax = subplot(2, 4, 1);
-set(ax, 'OuterPosition', [0.04 0.57 0.205 0.35]);
+ax_a = subplot(2, 4, 1);
+set(ax_a, 'OuterPosition', [0.058 0.57 0.205 0.35]); % 0.04 (x)
 imagesc(SC);
 xticks(1:n)
 yticks(1:n)
-xlabel({'Normalized structural',' connectivity'}, 'FontSize', font_size);
-c = colorbar(ax, 'westoutside');
-colormap(ax, 'cool');
+xlabel('Region', 'FontSize', font_size);
+ylabel('Region', 'FontSize', font_size);
+c = colorbar(ax_a, 'eastoutside');
+colormap(ax_a, 'cool');
 c.Limits = [0, 1]; 
 c.Ticks = [0, 1];
-c.FontSize = font_size; 
+c.FontSize = font_size;
+c.Label.String = 'arb.';
+c.Label.FontSize = font_size;
+c.Label.Position = [1.25, 0.5, 0];
 set(gca, 'FontSize', font_size);
 
 % Add subplot label
@@ -98,18 +117,22 @@ hold off;
 %--------------------------------------------------------------------------
 
 % Subplot B: Effective connectivity
-ax = subplot(2, 4, 2);
-set(ax, 'OuterPosition', [0.28 0.57 0.205 0.35]);
+ax_b = subplot(2, 4, 2);
+set(ax_b, 'OuterPosition', [0.3 0.57 0.205 0.35]); % 0.28 (x)
 imagesc(Ag);
 xticks(1:n)
 yticks(1:n)
-xlabel({'Group-level effective',' connectivity'}, 'FontSize', font_size);
-c = colorbar(ax, 'westoutside');
-C = redwhiteblue(-1, 1, n^2);
-colormap(ax, C);
-c.Limits = round([min(Ag(:)), max(Ag(:))],2); 
-c.Ticks = round([min(Ag(:)), max(Ag(:))],2);
+xlabel('Target region', 'FontSize', font_size);
+ylabel('Source region', 'FontSize', font_size);
+c = colorbar(ax_b, 'eastoutside');
+C = redwhiteblue(-1, 1, 100);
+colormap(ax_b, C);
+clim([-1 1]);
+c.Ticks = round([-1, 1],2);
 c.FontSize = font_size; 
+c.Label.String = 'Hz';
+c.Label.FontSize = font_size;
+c.Label.Position = [1.25, 0, 0];
 set(gca, 'FontSize', font_size);
 
 % Add subplot label
