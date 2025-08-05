@@ -7,7 +7,8 @@ function heb_sim(snr)
 % Description:  
 %   This function simulates subject-level effective connectivity matrices  
 %   as perturbations of a ground-truth (group-level) matrix. It compares  
-%   two methods for estimating effective connectivity:  
+%   two methods for estimating structurally informed directed
+%   connectivity:  
 %     1. Multivariate autoregressive (MVAR) modeling using structural  
 %        connectivity (SC) as a mask.  
 %     2. Hierarchical empirical Bayes (HEB) applied to dynamic causal  
@@ -23,13 +24,9 @@ function heb_sim(snr)
 % Input:  
 %   snr - Desired signal-to-noise ratio, controlling the level of noise  
 %         added to simulated signals.  
-%         Typical values:  
-%         * Low SNR (5) - High noise, making inference more challenging.  
-%         * Medium SNR (30) - Moderate noise, balancing signal fidelity.  
-%         * High SNR (200) - Low noise, leading to more accurate recovery.  
 %  
 % Example:  
-%   heb_sim(30); % Runs the simulation with an SNR of 30 (medium noise)  
+%   heb_sim(1); % Runs the simulation with an SNR of 1  
 %  
 % See also: heb_connectivity, heb_error, heb_init_mvar, heb_init_dcm,  
 %           heb_study  
