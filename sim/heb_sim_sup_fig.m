@@ -51,6 +51,9 @@ for i = 1:length(snr)
     heb_Ag = full(HEB.Ep);
     heb_Ag = reshape(heb_Ag, n, n);
 
+    % Correct for log-normal scaling (convert to Hz)
+    heb_Ag(logical(eye(n))) = -0.5 * exp(heb_Ag(logical(eye(n))));
+
     % Compute F-scores
     heb_f_scores(i) = heb_fscore(Ag, heb_Ag);
     mvar_f_scores(i) = heb_fscore(Ag, W_group);
