@@ -78,7 +78,7 @@ heb_study(Pv, Cv, network, HEB);
 
 This repository includes the full permutation-analysis pipeline used to test whether first-level evidence gains are specific to a structure-based second-level prior, rather than generic shrinkage (see Supporting Information in the associated paper).
 
-The complete raw inputs required to rerun the full 17-network analysis end-to-end (full HEB/DCM structures) are too large to distribute here. To keep the repository lightweight while still enabling reproducibility, the relevant directory provides scripts and compact real-data derivatives sufficient to rerun the toy permutation analysis (for the first, *Control A*, network; `heb_perm_bmr_rfx_bmc_toy.m`) and regenerate the corresponding summary figure (`heb_perm_fig.m`).
+The complete raw inputs needed to rerun the full 17-network analysis end-to-end (full HEB/DCM structures) are too large to distribute here. To keep the repository lightweight while enabling reproducibility, the relevant directory includes a scoped demonstration that runs the analysis procedure on the first (*Control A*) network using compact real-data derivatives: `heb_perm_bmr_rfx_bmc_toy.m` reruns the permutation and model comparison workflow, and `heb_perm_fig.m` regenerates the associated figure. Note that here, “toy” refers to reduced scope (one network), not synthetic data.
 
 ## **Flexibility and Interpretation**
 The code in this repository can be easily modified to explore different data-to-prior-variance mappings, allowing for hypothesis testing regarding the relationship between structural and effective connectivity.  
