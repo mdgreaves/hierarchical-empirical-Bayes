@@ -73,6 +73,12 @@ HEB = fullfile(pwd, sprintf('HEB_explore_%s.mat', network));
 heb_study(Pv, Cv, network, HEB);
 ```
 
+## Permutation-Based Analysis
+
+This repository includes a permutation-based analysis that tests whether first-level evidence gains are specific to the structure-based second-level prior, rather than to generic shrinkage (see the Supporting Information in the associated paper).
+
+Because the full permutation pipeline depends on very large HEB/DCM files, this repository provides a lightweight toy demonstration in `perm/` focused on one network (Control A). The toy script (`heb_perm_bmr_rfx_bmc_toy.m`) preserves the core procedure, and `heb_perm_fig.m` reproduces the corresponding summary visualization (expected model frequencies and prevalence of positive first-level log-Bayes factors).
+
 ## **Flexibility and Interpretation**
 The code in this repository can be easily modified to explore different data-to-prior-variance mappings, allowing for hypothesis testing regarding the relationship between structural and effective connectivity.  
 
