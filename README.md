@@ -6,8 +6,9 @@ This repository contains MATLAB functions for implementing the hierarchical empi
 
 The functions in this repository require:
 - MATLAB R2024a (or later)
-- The Statistical Parametric Mapping (SPM12) toolbox
-- The Parallel Computing Toolbox (recommended for efficient execution)
+- Statistical Parametric Mapping (SPM12) toolbox (see [here](https://github.com/spm/spm12))
+- Variational Bayesian Analysis (VBA) toolbox (for random-effects Bayesian model comparison; see [here](https://mbb-team.github.io/VBA-toolbox/))
+- Parallel Computing Toolbox (recommended for efficient execution; see [here](https://au.mathworks.com/help/parallel-computing/index.html))
 
 ## Running Simulations
 
@@ -75,9 +76,9 @@ heb_study(Pv, Cv, network, HEB);
 
 ## Permutation-Based Analysis
 
-This repository includes a permutation-based analysis that tests whether first-level evidence gains are specific to the structure-based second-level prior, rather than to generic shrinkage (see the Supporting Information in the associated paper).
+This repository includes the full permutation-analysis pipeline used to test whether first-level evidence gains are specific to a structure-based second-level prior, rather than generic shrinkage (see Supporting Information in the associated paper).
 
-Because the full permutation pipeline depends on very large HEB/DCM files, this repository provides a lightweight toy demonstration in `perm/` focused on one network (Control A). The toy script (`heb_perm_bmr_rfx_bmc_toy.m`) preserves the core procedure, and `heb_perm_fig.m` reproduces the corresponding summary visualization (expected model frequencies and prevalence of positive first-level log-Bayes factors).
+The complete raw inputs required to rerun the full 17-network analysis end-to-end (full HEB/DCM structures) are too large to distribute here. To keep the repository lightweight while still enabling reproducibility, the relevant directory provides scripts and compact real-data derivatives sufficient to rerun the toy permutation analysis (for the first, *Control A*, network; `heb_perm_bmr_rfx_bmc_toy.m`) and regenerate the corresponding summary figure (`heb_perm_fig.m`).
 
 ## **Flexibility and Interpretation**
 The code in this repository can be easily modified to explore different data-to-prior-variance mappings, allowing for hypothesis testing regarding the relationship between structural and effective connectivity.  
