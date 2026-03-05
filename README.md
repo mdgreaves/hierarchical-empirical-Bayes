@@ -1,10 +1,37 @@
 # Hierarchical Empirical Bayes Model
 
-This repository contains MATLAB functions for implementing the hierarchical empirical Bayes model of effective connectivity described in [Greaves et al. (2024)](https://doi.org/10.1101/2024.04.03.587831).
+This repository contains MATLAB code and derived data for implementing the hierarchical empirical Bayes model of effective connectivity described in [Greaves et al. (2024)](https://doi.org/10.1101/2024.04.03.587831).
+
+## Overview
+
+Here, we have included the core model implementation, simulation workflows, abbreviated permutation-based control analyses (see below), and materials needed to reproduce the main results figures. Code can be used to either reproduce the analyses reported in the manuscript or to apply the framework to an existing set of inverted dynamic causal models (DCMs).
+
+<p align="center">
+  <img src="core/heb_gen_fig.png" alt="Conceptual overview of the hierarchical empirical Bayes framework" width="900">
+</p>
+
+<p align="center">
+  <em>
+Conceptual overview of the hierarchical empirical Bayes model. Structural connectivity is mapped onto connection-specific prior variances via a linear function with intercept α and slope β (_a_–_b_), yielding a structure-based prior over group-level effective connectivity (_c_). Subject-specific effective connectivity is then modeled as a noisy deviation from the group-level profile (_d_–_e_), which, in the context of DCM, gives rise to blood-oxygen-level-dependent (BOLD) signals (shown for a single subject, _f_).
+  </em>
+</p>
+
+## Repository Structure
+
+```text
+.
+├── core/            % Core hierarchical empirical Bayes functions
+├── sim/             % Code for reproducing in silico analyses
+├── perm/            % Permutation-based prior-specificity and model-comparison analyses
+├── viz/             % Derived data and scripts for reproducing result visualizations
+├── heb_sim_run.m    % Top-level script for running the simulation workflow
+└── README.md
+
+```
 
 ## Prerequisites
 
-The functions in this repository require:
+Code in this repository requires:
 - MATLAB R2024a (or later)
 - Statistical Parametric Mapping (SPM12) toolbox (see [here](https://github.com/spm/spm12))
 - Variational Bayesian Analysis (VBA) toolbox (for random-effects Bayesian model comparison; see [here](https://mbb-team.github.io/VBA-toolbox/))
@@ -12,15 +39,15 @@ The functions in this repository require:
 
 ## Running Simulations
 
-To reproduce the simulations presented in the associated publication, download the full directory structure and execute the following function from the `/sim` directory:
+To reproduce the simulations presented in the associated publication, download the full directory structure and execute the following:
 
 ```matlab
 % Run simulations
 heb_sim_run();
 ```
 
-This function executes `heb_sim` across a predefined set of signal-to-noise ratio (SNR) levels. The analysis involves the following:
-1. Simulating ground-truth effective connectivity at both the group and subject levels, followed by the generation of downstream blood-oxygen-level-dependent (BOLD) signals.
+This function executes `heb_sim` (see `/sim` directory) across a predefined set of signal-to-noise ratio (SNR) levels. The analysis involves the following:
+1. Simulating ground-truth effective connectivity at both the group and subject levels, followed by the generation of downstream BOLD signals.
 2. Performing parameter recovery via:
    - The hierarchical empirical Bayes model.
    - A structurally informed multivariate autoregressive model (see Tanner et al., 2024, [here](https://doi.org/10.1038/s41467-024-50248-6)).
@@ -33,8 +60,8 @@ The figures generated are consistent with those presented in the main text (Fig.
 
 To apply the hierarchical empirical Bayes approach to an existing dataset, it is recommended that the following requirements be met:
 
-- A cell array of >2 dynamic causal models (DCMs) inverted under identical prior assumptions, modeling an effective connectivity network with *n* > 2 regions. Per the procedures in the associated study, the prior variance for intraregional connections is fixed at 1/64, while the prior variance for interregional connections is 1/2 (see the *n* diagonal elements of `DCM.M.pC`). This constraint can be modified by bypassing the relevant `assert` commands.
-- A normalized [0,1] structural connectivity matrix (`C`) (or another relevant matrix) matching the dimensions of the `A` (transition) matrices, such that `C(i,j)` corresponds to `DCM.Ep.A(i,j)`.
+- DCMs inverted under identical prior assumptions, modeling an effective connectivity network with *n* > 2 regions. Per the procedures in the associated study, the prior variance for intraregional connections is fixed at 1/64, while the prior variance for interregional connections is 1/2 (see the first *n* diagonal elements of `DCM.M.pC`). This constraint can be modified by bypassing the relevant `assert` commands.
+- A normalized [0,1] structural connectivity matrix (`C`) (or another relevant matrix) matching the dimensions of the `A` (transition) matrices, such that `C(i,j)` corresponds to `DCM.M.pE.A(i,j)`.
 
 ### **1. Explore hierarchical empirical Bayes models in a test sample**
 - Store the inverted *test* DCMs in a cell array `P` and the structural connectivity in `C`.
