@@ -12,7 +12,7 @@ This repository includes the core model implementation, simulation workflows, a 
   <img src="core/heb_gen_fig.png" alt="Conceptual overview of the hierarchical empirical Bayes framework" width="900">
 </p>
 
-Conceptual overview of the hierarchical empirical Bayes model. Structural connectivity is mapped onto connection-specific prior variances via a linear function with intercept α and slope β (*a*–*b*), yielding a structure-based prior over group-level effective connectivity (*c*). Subject-specific effective connectivity is then modeled as a noisy deviation from the group-level profile (*d*–*e*), with example blood-oxygen-level-dependent (BOLD) signals shown for a single subject (*f*).
+Conceptual overview of the hierarchical empirical Bayes model. Structural connectivity is mapped onto connection-specific prior variances via a linear function with intercept α and slope β (*a*–*b*), yielding a structure-based prior over group-level effective connectivity (*c*). Subject-specific effective connectivity is then modeled as a noisy deviation from the group-level profile (*d*–*e*). When embedded within DCM, these subject-level parameters give rise to predicted blood-oxygen-level-dependent (BOLD) signals (shown for a single subject, *f*).
 
 ## Repository Structure
 
