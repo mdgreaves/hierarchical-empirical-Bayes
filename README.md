@@ -1,20 +1,18 @@
 # Hierarchical Empirical Bayes Model
 
-This repository contains MATLAB code and derived data for implementing the hierarchical empirical Bayes model of effective connectivity described in [Greaves et al. (2024)](https://doi.org/10.1101/2024.04.03.587831).
+MATLAB code and derived data for implementing the hierarchical empirical Bayes model of effective connectivity described in [Greaves et al. (2024)](https://doi.org/10.1101/2024.04.03.587831).
 
 ## Overview
 
-Here, we have included the core model implementation, simulation workflows, abbreviated permutation-based control analyses (see below), and materials needed to reproduce the main results figures. Code can be used to either reproduce the analyses reported in the manuscript or to apply the framework to an existing set of inverted dynamic causal models (DCMs).
+This repository includes the core model implementation, simulation workflows, a scoped permutation-based control analysis (see below), and materials needed to reproduce the main results figures. The code can be used either to reproduce the analyses reported in the manuscript or to apply the framework to an existing set of inverted dynamic causal models (DCMs).
+
+<br>
 
 <p align="center">
   <img src="core/heb_gen_fig.png" alt="Conceptual overview of the hierarchical empirical Bayes framework" width="900">
 </p>
 
-<p align="center">
-  <em>
-Conceptual overview of the hierarchical empirical Bayes model. Structural connectivity is mapped onto connection-specific prior variances via a linear function with intercept α and slope β (_a_–_b_), yielding a structure-based prior over group-level effective connectivity (_c_). Subject-specific effective connectivity is then modeled as a noisy deviation from the group-level profile (_d_–_e_), which, in the context of DCM, gives rise to blood-oxygen-level-dependent (BOLD) signals (shown for a single subject, _f_).
-  </em>
-</p>
+Conceptual overview of the hierarchical empirical Bayes model. Structural connectivity is mapped onto connection-specific prior variances via a linear function with intercept α and slope β (*a*–*b*), yielding a structure-based prior over group-level effective connectivity (*c*). Subject-specific effective connectivity is then modeled as a noisy deviation from the group-level profile (*d*–*e*), with example blood-oxygen-level-dependent (BOLD) signals shown for a single subject (*f*).
 
 ## Repository Structure
 
