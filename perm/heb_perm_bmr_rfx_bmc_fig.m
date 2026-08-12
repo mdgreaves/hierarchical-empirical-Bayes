@@ -1,5 +1,5 @@
 % =========================================================================
-% heb_perm_fig.m
+% heb_perm_bmr_rfx_bmc_fig.m
 % =========================================================================
 % Figure script for permutation-based assessment of structure-based priors
 % (Fig. S5 visualization)
