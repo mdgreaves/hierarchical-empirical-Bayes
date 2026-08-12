@@ -20,7 +20,7 @@ Conceptual overview of the hierarchical empirical Bayes model. Structural connec
 .
 ├── core/            % Core hierarchical empirical Bayes functions
 ├── sim/             % Code for reproducing in silico analyses
-├── perm/            % Permutation-based prior-specificity and model-comparison analyses
+├── perm/            % Permutation-based analyses
 ├── viz/             % Derived data and scripts for reproducing result visualizations
 ├── heb_sim_run.m    % Top-level script for running the simulation workflow
 └── README.md
@@ -105,11 +105,13 @@ heb_study(Pv, Cv, network, HEB);
 
 All main-text figures except one schematic artwork (Fig. 1) are reproducible from code in this repository. Fig. 2 is generated via the simulation scripts (orchestrated by `heb_sim_run`, with figure generation in `sim/heb_sim_fig.m`), while Figs. 3-5 and Supporting Information Figs. S3-S4 are reproduced from compact derived data in `viz/` using `heb_bf_figs.m` and `heb_brain_fig.m`.
 
-### Permutation-Based Prior-Specificity Analysis
+### Permutation-Based Analyses
 
-This repository includes the permutation-analysis pipeline used to test whether first-level evidence gains are specific to a structure-based second-level prior, rather than generic shrinkage (see Supporting Information in the associated paper).
+This repository includes resources for reproducing the permutation-based analyses reported in the Supporting Information.
 
-The complete raw inputs needed to rerun the full 17-network analysis end-to-end (full HEB/DCM structures) are too large to distribute here. To keep the repository lightweight while enabling reproducibility, `perm/` includes a scoped demonstration that runs the same procedure on the first (*Control A*) network using compact real-data derivatives: `heb_perm_bmr_rfx_bmc_toy.m` reruns the permutation/model-comparison workflow, and `heb_perm_bmr_rfx_bmc_fig.m` regenerates the associated Supporting Information Fig. S5. Here, “toy” refers to reduced scope (one network), not synthetic data.
+The full-pipeline permutation null under scrambled structural connectivity is reproduced from derived data using `perm/heb_perm_pipeline_null_fig.m` and `perm/plperm/perm_si_figure_data_B1000.mat` (Supporting Information Fig. S5). These derived data contain the network-wise outputs from 1000 full-pipeline permutations for each of the 17 networks.
+
+The complete raw inputs needed to rerun the full 17-network analysis end-to-end (full HEB/DCM structures) are too large to distribute here. To keep the repository lightweight while enabling reproducibility, `perm/` also includes a scoped demonstration of the conditioned permutation/model-comparison analysis used to test whether first-level evidence gains are specific to a structure-based second-level prior, rather than generic shrinkage. This demonstration runs the same procedure on the first (*Control A*) network using compact real-data derivatives: `heb_perm_bmr_rfx_bmc_toy.m` reruns the permutation/model-comparison workflow, and `heb_perm_bmr_rfx_bmc_fig.m` regenerates the associated Supporting Information Fig. S6. Here, “toy” refers to reduced scope (one network), not synthetic data.
 
 ## **Flexibility and Interpretation**
 The code in this repository can be easily modified to explore different data-to-prior-variance mappings, allowing for hypothesis testing regarding the relationship between structural and effective connectivity.  

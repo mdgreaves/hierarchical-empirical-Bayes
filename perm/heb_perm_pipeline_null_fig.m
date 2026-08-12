@@ -1,4 +1,4 @@
-function fig = heb_perm_pipeline_null_fig(data_file, out_dir, panel_b_kind)
+function fig = heb_perm_pipeline_null_fig(data_file, out_dir)
 % =========================================================================
 % heb_perm_pipeline_null_fig.m
 % =========================================================================
@@ -31,15 +31,6 @@ function fig = heb_perm_pipeline_null_fig(data_file, out_dir, panel_b_kind)
 %     alpha,beta mapping.
 %   - Dashed line: equality (x = y).
 %
-% Optional panel_b_kind values:
-%   'joint_param_mode'    PVMI at the joint modal permuted alpha/beta pair
-%   'pvmi_mode'           mode of the permuted PVMI distribution
-%   'marginal_param_mode' PVMI at separate marginal alpha and beta modes
-%   'beta_joint_mode'     empirical beta versus joint modal permuted beta
-%   'beta_mode'           empirical beta versus marginal modal permuted beta
-%   'logbf_mode'          PVMI for the permutation nearest modal logBF
-%   'median'              median of the permuted PVMI distribution
-%
 % Usage:
 %   cd perm
 %   heb_perm_pipeline_null_fig
@@ -51,9 +42,6 @@ if nargin < 1 || isempty(data_file)
 end
 if nargin < 2 || isempty(out_dir)
     out_dir = fullfile(pwd, 'plperm', 'figures');
-end
-if nargin < 3 || isempty(panel_b_kind)
-    panel_b_kind = 'joint_param_mode';
 end
 if ~exist(out_dir, 'dir')
     mkdir(out_dir);
@@ -74,7 +62,7 @@ if ~usejava('desktop')
 end
 
 fig = figure('Color', 'w', ...
-    'Name', ['Pipeline permutation null: ', panel_b_kind], ...
+    'Name', 'Pipeline permutation null', ...
     'Units', 'normalized', ...
     'Visible', fig_visible, ...
     'Position', [0 1/2 1 1/1.3]);
@@ -89,8 +77,7 @@ for i = 1:numel(rows)
 end
 
 ax{18} = subplot(3, 6, 18);
-plot_panel_b(ax{18}, rows, perm_si.colors, font_size, ...
-    line_width, panel_b_kind);
+plot_panel_b(ax{18}, rows, perm_si.colors, font_size, line_width);
 
 annotation('textbox', [0.13, 0.94, 0.05, 0.05], ...
     'String', '\bf A', ...
@@ -122,10 +109,9 @@ annotation('textbox', [0.24 0.24 0.25 0.58], ...
     'LineStyle', 'none', ...
     'FitBoxToText', 'off');
 
-suffix = clean_suffix(panel_b_kind);
-fig_file = fullfile(out_dir, ['heb_perm_pipeline_null_fig_', suffix, '.fig']);
-png_file = fullfile(out_dir, ['heb_perm_pipeline_null_fig_', suffix, '.png']);
-pdf_file = fullfile(out_dir, ['heb_perm_pipeline_null_fig_', suffix, '.pdf']);
+fig_file = fullfile(out_dir, 'heb_perm_pipeline_null_fig.fig');
+png_file = fullfile(out_dir, 'heb_perm_pipeline_null_fig.png');
+pdf_file = fullfile(out_dir, 'heb_perm_pipeline_null_fig.pdf');
 
 savefig(fig, fig_file);
 exportgraphics(fig, png_file, 'Resolution', 300);
@@ -210,8 +196,8 @@ text(ax, x, y, txt, ...
     'Interpreter', 'tex');
 end
 
-function plot_panel_b(ax, rows, colors, font_size, line_width, mode_kind)
-[x, y, x_label_lines, y_label_lines] = panel_b_values(rows, mode_kind);
+function plot_panel_b(ax, rows, colors, font_size, line_width)
+[x, y, x_label_lines, y_label_lines] = panel_b_values(rows);
 
 ok = isfinite(x) & isfinite(y);
 lims = [min([x(ok); y(ok)]), max([x(ok); y(ok)])];
@@ -243,46 +229,10 @@ box(ax, 'off');
 set(ax, 'FontSize', font_size, 'TickDir', 'out');
 end
 
-function [x, y, x_label_lines, y_label_lines] = panel_b_values(rows, mode_kind)
-switch lower(mode_kind)
-    case {'beta_joint_mode', 'beta_joint', 'beta'}
-        x = [rows.perm_beta_joint_mode]';
-        y = [rows.empirical_beta]';
-        x_label_lines = {'Modal permuted', '\beta'};
-        y_label_lines = {'Empirical', '\beta'};
-    case {'beta_mode', 'beta_marginal'}
-        x = [rows.perm_beta_mode]';
-        y = [rows.empirical_beta]';
-        x_label_lines = {'Marginal modal', 'permuted \beta'};
-        y_label_lines = {'Empirical', '\beta'};
-    case {'joint_param_mode', 'joint', 'param_mode'}
-        x = [rows.perm_pvmi_at_joint_param_mode]';
-        y = [rows.empirical_pvmi]';
-        x_label_lines = {'Permuted prior-variance', 'modulation at modal \alpha,\beta'};
-        y_label_lines = {'Empirical prior-', 'variance modulation'};
-    case {'marginal_param_mode', 'marginal'}
-        x = [rows.perm_pvmi_at_marginal_param_mode]';
-        y = [rows.empirical_pvmi]';
-        x_label_lines = {'Permuted prior-variance', 'modulation at marginal modes'};
-        y_label_lines = {'Empirical prior-', 'variance modulation'};
-    case {'pvmi_mode', 'mode'}
-        x = [rows.perm_pvmi_mode]';
-        y = [rows.empirical_pvmi]';
-        x_label_lines = {'Mode of permuted', 'prior-variance modulation'};
-        y_label_lines = {'Empirical prior-', 'variance modulation'};
-    case {'logbf_mode', 'evidence_mode'}
-        x = [rows.perm_pvmi_at_logBF_mode]';
-        y = [rows.empirical_pvmi]';
-        x_label_lines = {'Permuted prior-variance', 'modulation at modal evidence'};
-        y_label_lines = {'Empirical prior-', 'variance modulation'};
-    case {'median', 'pvmi_median'}
-        x = [rows.perm_pvmi_median]';
-        y = [rows.empirical_pvmi]';
-        x_label_lines = {'Median permuted', 'prior-variance modulation'};
-        y_label_lines = {'Empirical prior-', 'variance modulation'};
-    otherwise
-        error('Unknown panel_b_kind: %s', mode_kind);
-end
+x = [rows.perm_pvmi_at_joint_param_mode]';
+y = [rows.empirical_pvmi]';
+x_label_lines = {'Permuted prior-variance', 'modulation at modal \alpha,\beta'};
+y_label_lines = {'Empirical prior-', 'variance modulation'};
 end
 
 function yl = histogram_ylim(rows)
@@ -302,9 +252,4 @@ if mx <= 0
 else
     yl = [0 ceil(mx * 1.08)];
 end
-end
-
-function suffix = clean_suffix(s)
-suffix = regexprep(lower(s), '[^a-z0-9]+', '_');
-suffix = regexprep(suffix, '^_+|_+$', '');
 end
