@@ -2,7 +2,7 @@
 % heb_perm_bmr_rfx_bmc_fig.m
 % =========================================================================
 % Figure script for permutation-based assessment of structure-based priors
-% (Fig. S5 visualization)
+% (Fig. S6 visualization)
 %
 % Context:
 % This script visualizes network-wise outputs from permutation BMR + RFX
