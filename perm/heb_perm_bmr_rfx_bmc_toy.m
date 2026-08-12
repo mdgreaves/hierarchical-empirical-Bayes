@@ -57,7 +57,7 @@
 %    VBA_groupBMC to estimate expected model frequencies (Ef) and
 %    exceedance probabilities (ep).
 %
-% 7) Save outputs for plotting/reporting (e.g., Fig. S5-style summaries).
+% 7) Save outputs for plotting/reporting (e.g., Fig. S6-style summaries).
 %
 % What this helps show
 % --------------------
